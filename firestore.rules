@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.admin == true
+        && request.auth.token.email == "srinivas556k@gmail.com";
+    }
+
+    // Articles collection
+    match /articles/{articleId} {
+
+      // Anyone can read published articles. Drafts and all mutations are
+      // restricted to Firebase users with the server-issued admin claim.
+      allow read: if resource.data.status == "published" || isAdmin();
+
+      allow create: if isAdmin()
+        && request.resource.data.title is string
+        && request.resource.data.slug is string
+        && request.resource.data.status in ["draft", "published", "unpublished"];
+
+      allow update: if isAdmin()
+        && request.resource.data.title is string
+        && request.resource.data.slug is string
+        && request.resource.data.status in ["draft", "published", "unpublished"];
+
+      allow delete: if isAdmin();
+    }
+
+  }
+}

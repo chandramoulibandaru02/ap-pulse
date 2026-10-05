@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "news-ap-915b8",
+    "ap-pulse": "news-ap-915b8"
+  },
+  "targets": {},
+  "etags": {}
+}
